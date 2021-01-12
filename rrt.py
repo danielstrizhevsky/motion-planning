@@ -8,11 +8,10 @@ from rrt_config import (
     VIS_PAUSE_LENGTH,
 )
 
+
 class RRT(RRTBase):
     def step(self, visualize=True):
-        random_point = (
-            random.random() * RIGHT_BOUND, random.random() * BOTTOM_BOUND
-        )
+        random_point = random.random() * RIGHT_BOUND, random.random() * BOTTOM_BOUND
         nearest = self.nearest_neighbor(random_point)
         new_point = self.get_new_point(nearest, random_point)
         if new_point is None:
@@ -22,10 +21,10 @@ class RRT(RRTBase):
         self.points.append(new_point)
 
         if visualize:
-            line, = plt.plot(
+            line = plt.plot(
                 [nearest[0], new_point[0]],
                 [nearest[1], new_point[1]],
-            )
+            )[0]
             self.edges_to_lines[(nearest, new_point)] = line
             plt.pause(VIS_PAUSE_LENGTH)
 

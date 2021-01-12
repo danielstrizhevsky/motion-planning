@@ -134,4 +134,3 @@ class RRTBase:
             line.set_linewidth(2)
             line.set_zorder(3)
             plt.pause(VIS_PAUSE_LENGTH)
-

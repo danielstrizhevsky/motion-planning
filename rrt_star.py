@@ -17,7 +17,7 @@ class RRTStar(RRTBase):
     def min_cost_neighbor(self, new_point, neighbors):
         return min(
             neighbors,
-            key=lambda x: self._get_cost(x) + self._calculate_distance(x, new_point)
+            key=lambda x: self._get_cost(x) + self._calculate_distance(x, new_point),
         )
 
     def near_neighbors(self, new_point):
@@ -25,8 +25,7 @@ class RRTStar(RRTBase):
             return self.points
         neighbors = []
         distance_cutoff = min(
-            GAMMA_RRT_STAR * (log2(len(self.points)) / len(self.points))**0.5,
-            DELTA
+            GAMMA_RRT_STAR * (log2(len(self.points)) / len(self.points)) ** 0.5, DELTA
         )
         for point in self.points:
             dist = self._calculate_distance(new_point, point)
@@ -37,13 +36,12 @@ class RRTStar(RRTBase):
     def neighbors_to_rewire(self, neighbors, new_point):
         resulting_neighbors = []
         for neighbor in neighbors:
-            if (
-                self._get_cost(new_point) + self._calculate_distance(new_point, neighbor) <
-                self._get_cost(neighbor)
-            ):
+            if self._get_cost(new_point) + self._calculate_distance(
+                new_point, neighbor
+            ) < self._get_cost(neighbor):
                 resulting_neighbors.append(neighbor)
         return resulting_neighbors
-    
+
     def rewire_neighbor_through_new_point(self, neighbor, new_point, visualize=True):
         parent = self.parents[neighbor]
         self.parents[neighbor] = new_point
@@ -51,18 +49,16 @@ class RRTStar(RRTBase):
         self.edges[new_point].append(neighbor)
 
         if visualize:
-            line, = plt.plot(
+            line = plt.plot(
                 [new_point[0], neighbor[0]],
                 [new_point[1], neighbor[1]],
-            )
+            )[0]
             self.edges_to_lines[(new_point, neighbor)] = line
             self.edges_to_lines[(parent, neighbor)].remove()
             del self.edges_to_lines[(parent, neighbor)]
 
     def step(self, visualize=True):
-        random_point = (
-            random.random() * RIGHT_BOUND, random.random() * BOTTOM_BOUND
-        )
+        random_point = random.random() * RIGHT_BOUND, random.random() * BOTTOM_BOUND
         nearest = self.nearest_neighbor(random_point)
         new_point = self.get_new_point(nearest, random_point)
         if new_point is None:
@@ -78,10 +74,10 @@ class RRTStar(RRTBase):
             )
 
         if visualize:
-            line, = plt.plot(
+            line = plt.plot(
                 [best_neighbor[0], new_point[0]],
                 [best_neighbor[1], new_point[1]],
-            )
+            )[0]
             self.edges_to_lines[(best_neighbor, new_point)] = line
             plt.pause(VIS_PAUSE_LENGTH)
 
