@@ -5,7 +5,9 @@ from typing import List, Tuple
 import random
 
 from rrt_star import RRTStar
-from rrt_config import (
+from config.rrt_config import (
+    AGENT_START_POSITION,
+    GOAL_POSITION,
     ANYTIME_TRAJECTORY_LENGTH,
     DELTA,
     GAMMA_RRT_STAR,
@@ -100,10 +102,7 @@ def onclick(event: MouseEvent, rrt: AnytimeRRTStar) -> None:
 
 
 def run_rrt_star():
-    rrt = AnytimeRRTStar(
-        (10, 10),
-        ((85, 85), (95, 95)),
-    )
+    rrt = AnytimeRRTStar(AGENT_START_POSITION, GOAL_POSITION)
     fig, _ = plt.subplots()
     fig.canvas.mpl_connect("button_press_event", lambda event: onclick(event, rrt))
     rrt.init_plot()

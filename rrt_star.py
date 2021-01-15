@@ -3,8 +3,10 @@ from math import log2
 from typing import List, Tuple
 import random
 
-from rrt_base import RRTBase
-from rrt_config import (
+from base.rrt_base import RRTBase
+from config.rrt_config import (
+    AGENT_START_POSITION,
+    GOAL_POSITION,
     DELTA,
     GAMMA_RRT_STAR,
     RIGHT_BOUND,
@@ -136,10 +138,7 @@ class RRTStar(RRTBase):
 
 
 def run_rrt_star(num_steps):
-    rrt = RRTStar(
-        (10, 10),
-        ((85, 85), (95, 95)),
-    )
+    rrt = RRTStar(AGENT_START_POSITION, GOAL_POSITION)
     rrt.init_plot()
 
     for i in range(num_steps):

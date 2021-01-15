@@ -1,8 +1,10 @@
 from matplotlib import pyplot as plt
 import random
 
-from rrt_base import RRTBase
-from rrt_config import (
+from base.rrt_base import RRTBase
+from config.rrt_config import (
+    AGENT_START_POSITION,
+    GOAL_POSITION,
     BOTTOM_BOUND,
     RIGHT_BOUND,
     VIS_PAUSE_LENGTH,
@@ -30,10 +32,7 @@ class RRT(RRTBase):
 
 
 def run_rrt(num_steps: int) -> None:
-    rrt = RRT(
-        (10, 10),
-        ((85, 85), (95, 95)),
-    )
+    rrt = RRT(AGENT_START_POSITION, GOAL_POSITION)
     rrt.init_plot()
 
     for i in range(num_steps):
