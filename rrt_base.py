@@ -26,7 +26,11 @@ class RRTBase:
 
         # For visualization
         self.edges_to_lines = {}
+        self.lines_to_goal = []
+        self.lines_from_start = []
+        self.lines_from_current = []
         self.agent_viz = None
+        self.goal_viz = None
 
     def init_plot(self):
         plt.xlim([0, RIGHT_BOUND])
@@ -34,15 +38,18 @@ class RRTBase:
         plt.gca().set_aspect("equal")
         for obstacle in OBSTACLES:
             plt.gca().add_patch(Rectangle(*obstacle))
-        plt.gca().add_patch(
+        self.goal_viz = plt.gca().add_patch(
             Rectangle(
                 self.goal[0],
                 self.goal[1][0] - self.goal[0][0],
                 self.goal[1][1] - self.goal[0][1],
-                color="green",
+                color="#00FF00",
             )
         )
         self.agent_viz = plt.plot(10, 10, "ro", zorder=4)[0]
+
+    def step(self):
+        pass
 
     def _is_in_goal(self, point):
         return (
@@ -82,7 +89,7 @@ class RRTBase:
 
         return path[::-1]
 
-    def move_towards_point(self, path, to_travel=AGENT_SPEED):
+    def take_step_along_path(self, path, to_travel=AGENT_SPEED):
         if not path:
             return
         point = path[-1]
@@ -90,7 +97,7 @@ class RRTBase:
         if distance <= to_travel:
             self.agent_pos = point
             path.pop()
-            self.move_towards_point(path, to_travel - distance)
+            self.take_step_along_path(path, to_travel - distance)
         else:
             dist_x = point[0] - self.agent_pos[0]
             dist_y = point[1] - self.agent_pos[1]
@@ -99,6 +106,16 @@ class RRTBase:
                 self.agent_pos[1] + to_travel / distance * dist_y,
             )
             self.agent_pos = new_point
+
+    def move_along_path_until_done(self, path, keep_stepping=False, visualize=True):
+        while path:
+            self.take_step_along_path(path)
+            self.agent_viz.set_xdata(self.agent_pos[0])
+            self.agent_viz.set_ydata(self.agent_pos[1])
+            if keep_stepping:
+                self.step()
+            if visualize:
+                plt.pause(VIS_PAUSE_LENGTH)
 
     def _calculate_distance(self, a, b):
         return ((b[1] - a[1]) ** 2 + (b[0] - a[0]) ** 2) ** 0.5
@@ -125,12 +142,19 @@ class RRTBase:
             return None
         return new_point
 
-    def highlight_path_to_goal(self):
+    def redraw_path_to_goal(self):
+        for line in self.lines_to_goal:
+            line.remove()
+        self.lines_to_goal = []
         path = self.best_path_to_goal()
         for i in range(len(path) - 1):
             start, end = path[i], path[i + 1]
-            line = self.edges_to_lines[(start, end)]
+            line = plt.plot(
+                [start[0], end[0]],
+                [start[1], end[1]],
+            )[0]
             line.set_color("black")
             line.set_linewidth(2)
             line.set_zorder(3)
-            plt.pause(VIS_PAUSE_LENGTH)
+            self.lines_to_goal.append(line)
+        plt.pause(VIS_PAUSE_LENGTH)

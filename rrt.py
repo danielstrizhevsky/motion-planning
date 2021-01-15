@@ -40,13 +40,9 @@ def run_rrt(num_steps):
         if i % 100 == 0:
             print(i, "steps completed.")
         rrt.step()
-    rrt.highlight_path_to_goal()
+    rrt.redraw_path_to_goal()
     path = rrt.best_path_to_goal()[::-1]
-    while path:
-        rrt.move_towards_point(path)
-        rrt.agent_viz.set_xdata(rrt.agent_pos[0])
-        rrt.agent_viz.set_ydata(rrt.agent_pos[1])
-        plt.pause(VIS_PAUSE_LENGTH)
+    rrt.move_along_path_until_done(path)
     plt.show()
 
 

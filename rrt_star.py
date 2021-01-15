@@ -80,6 +80,7 @@ class RRTStar(RRTBase):
             )[0]
             self.edges_to_lines[(best_neighbor, new_point)] = line
             plt.pause(VIS_PAUSE_LENGTH)
+        return self._is_in_goal(new_point)
 
 
 def run_rrt_star(num_steps):
@@ -93,15 +94,11 @@ def run_rrt_star(num_steps):
         if i % 100 == 0:
             print(i, "steps completed.")
         rrt.step()
-    rrt.highlight_path_to_goal()
+    rrt.redraw_path_to_goal()
     path = rrt.best_path_to_goal()[::-1]
-    while path:
-        rrt.move_towards_point(path)
-        rrt.agent_viz.set_xdata(rrt.agent_pos[0])
-        rrt.agent_viz.set_ydata(rrt.agent_pos[1])
-        plt.pause(VIS_PAUSE_LENGTH)
+    rrt.move_along_path_until_done(path)
     plt.show()
 
 
 if __name__ == "__main__":
-    run_rrt_star(3000)
+    run_rrt_star(2000)
