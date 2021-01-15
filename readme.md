@@ -9,19 +9,19 @@ See them in action below!
 ---
 ## Anytime RRT*
 
-<img src="gifs/anytime_rrt_star.gif" width="300" height="300"/>
-<img src="gifs/anytime_rrt_star2.gif" width="300" height="300"/>
+<img src="gifs/anytime_rrt_star.gif" width="275" height="275"/>
+<img src="gifs/anytime_rrt_star2.gif" width="275" height="275"/>
 
 ---
 ## RRT*
 
-<img src="gifs/rrt_star.gif" width="300" height="300"/>
-<img src="gifs/rrt_star2.gif" width="300" height="300"/>
+<img src="gifs/rrt_star.gif" width="275" height="275"/>
+<img src="gifs/rrt_star2.gif" width="275" height="275"/>
 
 ---
 ## RRT
 
-<img src="gifs/rrt.gif" width="300" height="300"/>
+<img src="gifs/rrt.gif" width="275" height="275"/>
 
 ---
 ## Requirements
