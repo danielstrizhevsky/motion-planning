@@ -29,8 +29,6 @@ class RRTBase(ABC):
         # For visualization
         self.edges_to_lines = {}
         self.lines_to_goal = []
-        self.lines_from_start = []
-        self.lines_from_current = []
         self.agent_viz = None
         self.goal_viz = None
 

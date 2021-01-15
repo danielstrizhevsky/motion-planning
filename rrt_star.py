@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 from math import log2
+from typing import List, Tuple
 import random
 
 from rrt_base import RRTBase
@@ -14,13 +15,35 @@ from rrt_config import (
 
 
 class RRTStar(RRTBase):
-    def min_cost_neighbor(self, new_point, neighbors):
+    def min_cost_neighbor(
+        self, new_point: Tuple[float, float], neighbors: List[Tuple[float, float]]
+    ) -> Tuple[float, float]:
+        """
+        Given a new point and a list of neighbors, return the one that minimizes
+        cost(neighbor) + distance(neighbor, new_point)
+
+        new_point: (x, y) tuple describing the new point
+        neighbors: list of points from which we want to choose
+        return: The point in neighbors that minimizes distance through it to new_point
+        """
         return min(
             neighbors,
-            key=lambda x: self._get_cost(x) + self._calculate_distance(x, new_point),
+            key=lambda neighbor: (
+                self._get_cost(neighbor) + self._calculate_distance(neighbor, new_point)
+            ),
         )
 
-    def near_neighbors(self, new_point):
+    def near_neighbors(
+        self, new_point: Tuple[float, float]
+    ) -> List[Tuple[float, float]]:
+        """
+        Finds all points in the tree that are within
+        GAMMA_RRT_STAR * sqrt(log_2(number of points) / number of points)
+        distance from the new point.
+
+        new_point: (x, y) tuple describing the new point
+        return: List of points in the RRT this distance from the new point
+        """
         if len(self.points) == 1:
             return self.points
         neighbors = []
@@ -33,7 +56,19 @@ class RRTStar(RRTBase):
                 neighbors.append(point)
         return neighbors
 
-    def neighbors_to_rewire(self, neighbors, new_point):
+    def neighbors_to_rewire(
+        self, neighbors: List[Tuple[float, float]], new_point: Tuple[float, float]
+    ) -> List[Tuple[float, float]]:
+        """
+        Return neighbors that should be rewired given a list of neighbors and a new
+        point to rewire through. Neighbors should be rewired if:
+        cost(new_point) + distance(new_point, neighbor) < cost(neighbor)
+
+        neighbors: list of points from which we choose a subset to rewire
+        new_point: (x, y) tuple describing the new point
+        return: a list of points describing the points from neighbors that should
+        be rewired.
+        """
         resulting_neighbors = []
         for neighbor in neighbors:
             if self._get_cost(new_point) + self._calculate_distance(
@@ -42,7 +77,21 @@ class RRTStar(RRTBase):
                 resulting_neighbors.append(neighbor)
         return resulting_neighbors
 
-    def rewire_neighbor_through_new_point(self, neighbor, new_point, visualize=True):
+    def rewire_neighbor_through_new_point(
+        self,
+        neighbor: Tuple[float, float],
+        new_point: Tuple[float, float],
+        visualize: bool = True,
+    ) -> None:
+        """
+        Given a neighbor and a new point (both points in the RRT),
+        rewire the neighbor through the new point. The new point becomes
+        its new parent, and we remove the edge between the neigbhbor and
+        its previous parent.
+
+        neighbor: (x, y) tuple representing point to rewire through new point
+        new_point: (x, y) tuple representing new parent of the neighbor
+        """
         parent = self.parents[neighbor]
         self.parents[neighbor] = new_point
         self.edges[parent].remove(neighbor)
@@ -63,11 +112,14 @@ class RRTStar(RRTBase):
         new_point = self.get_new_point(nearest, random_point)
         if new_point is None:
             return
+        # get nearby neighbors to the new point, including nearest
         nearby = self.near_neighbors(new_point) + [nearest]
         best_neighbor = self.min_cost_neighbor(new_point, nearby)
         self.edges[best_neighbor].append(new_point)
         self.parents[new_point] = best_neighbor
         self.points.append(new_point)
+        # Rewire neighbors that would have a better cost if they went
+        # through our new point instead.
         for neighbor in self.neighbors_to_rewire(nearby[:-1], new_point):
             self.rewire_neighbor_through_new_point(
                 neighbor, new_point, visualize=visualize

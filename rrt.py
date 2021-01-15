@@ -10,7 +10,7 @@ from rrt_config import (
 
 
 class RRT(RRTBase):
-    def step(self, visualize=True):
+    def step(self, visualize: bool = True) -> None:
         random_point = random.random() * RIGHT_BOUND, random.random() * BOTTOM_BOUND
         nearest = self.nearest_neighbor(random_point)
         new_point = self.get_new_point(nearest, random_point)
@@ -29,7 +29,7 @@ class RRT(RRTBase):
             plt.pause(VIS_PAUSE_LENGTH)
 
 
-def run_rrt(num_steps):
+def run_rrt(num_steps: int) -> None:
     rrt = RRT(
         (10, 10),
         ((85, 85), (95, 95)),
