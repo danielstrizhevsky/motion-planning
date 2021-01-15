@@ -1,8 +1,11 @@
 # Motion Planning algorithms
 Implementations and interactive visualizations of motion planning algorithms. Currently, the following algorithms are implemented:
 - RRT
+    - Rapidly Exploring Random Tree.
 - RRT*
+    - Probabilistically Optimal RRT that rewires the tree to try to improve upon existing paths.
 - Anytime RRT*
+    - An implementation of RRT* that allows for planning while the agent moves. Once a path to the goal is found, the agent begins following a set trajectory, but the tree continues growing from the end of this trajectory. This allows for continuous improvement of the path to the goal while the agent is moving.
 
 See them in action below!
 
