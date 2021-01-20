@@ -7,7 +7,7 @@ from typing import List, Tuple
 import random
 import time
 
-from config.rrt_config import (
+from motion_planning.config.rrt_config import (
     AGENT_SPEED,
     BOTTOM_BOUND,
     DELTA,

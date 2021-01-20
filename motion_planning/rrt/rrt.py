@@ -1,8 +1,8 @@
 from matplotlib import pyplot as plt
 import random
 
-from base.rrt_base import RRTBase
-from config.rrt_config import (
+from rrt_base import RRTBase
+from motion_planning.config.rrt_config import (
     AGENT_START_POSITION,
     GOAL_POSITION,
     BOTTOM_BOUND,

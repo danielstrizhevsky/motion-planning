@@ -5,7 +5,7 @@ from typing import List, Tuple
 import random
 
 from rrt_star import RRTStar
-from config.rrt_config import (
+from motion_planning.config.rrt_config import (
     AGENT_START_POSITION,
     GOAL_POSITION,
     ANYTIME_TRAJECTORY_LENGTH,

@@ -36,11 +36,15 @@ See them in action below!
 
 ---
 ## Usage
-Run any of the following:
+In the top-level directory, run
 ```
-python rrt.py
-python rrt_star.py
-python anytime_rrt_star.py
+export PYTHONPATH="."
+```
+Then, run any of the following:
+```
+python motion_planning/rrt/rrt.py
+python motion_planning/rrt/rrt_star.py
+python motion_planning/rrt/anytime_rrt_star.py
 ```
 If running the anytime RRT* algorithm, you can click anywhere on the visualization to move the goal there! For now, `ctrl+c` to exit.
 
